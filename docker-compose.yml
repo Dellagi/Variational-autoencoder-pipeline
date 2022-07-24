@@ -1,0 +1,41 @@
+version: "3.8"
+
+x-env-variables:
+  &env-variables
+  kafka_topic_1: xray
+  kafka_topic_2: inference
+
+services:
+  mainkafka:
+    build: ./kafka-server/
+    ports:
+      - 9092:9092
+      - 2181:2181
+    expose:
+      - "9092"
+      - "2181"
+    networks:
+      - default
+    volumes: 
+      - shared-volume:/usr/local/kafka/bin
+    command: >
+      sh -c "/scripts/start-kafka.sh && \
+            /usr/local/kafka/bin/kafka-topics.sh --create --zookeeper localhost:2181 -replication-factor 1 --partitions 1 --topic ${kafka_topic_1}
+      "
+    environment: *env-variables
+  flask:
+    build: ./API/
+    ports:
+      - 8080:8080
+    depends_on:
+      - mainkafka
+    networks:
+      - default
+    environment:
+      <<: *env-variables
+      kafka_server: mainkafka:9092
+    volumes:
+      - shared-volume:/opt/kafka_toolkit
+
+volumes:
+  shared-volume: {}
