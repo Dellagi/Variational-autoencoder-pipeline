@@ -19,7 +19,7 @@ stages:
 Starting_cluster:
   stage: Starting_cluster
   script:
-    - ./ci/start_cls.sh
+    - ./databricks-ci/start_cls.sh
 
 Importing_motebooks_and_data:
   stage: Importing_motebooks_and_data
@@ -31,4 +31,4 @@ Running_notebooks:
   script:
     - export notebook_name=variational_autoencoder_spark
     - echo "Running Notebook ${notebook_name}"
-    - ./ci/runNotebook.sh
+    - ./databricks-ci/runNotebook.sh
