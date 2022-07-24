@@ -7,7 +7,7 @@ variables:
   DATABRICKS_HOST: ""
 
 before_script:
-  - chmod +x ./ci/*.sh
+  - chmod +x ./databricks-ci/*.sh
   - apt-get update && apt-get install jq -y
   - pip install databricks-cli==0.16.5
 
